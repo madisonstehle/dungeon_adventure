@@ -1,4 +1,5 @@
 import random
+from Dungeon import Dungeon
 
 class Adventurer:
   """
@@ -28,6 +29,9 @@ class Adventurer:
   def __init__(self, name):
     self.name = name
     self.hit_points = random.randint(75, 100)
+    self.x = 0
+    self.y = 0
+    self.alive = True
 
   def __str__(self):
     """
@@ -56,18 +60,23 @@ class Adventurer:
     Ability to move in Dungeon (you might decide to place this behavior elsewhere)
     """
     # SO FUN FACT colab doesn't use version 3.10 of python so the following code throws an error HOORAY
+    # need to add in checks for IF the direction is a valid direction to move
     key = input(
       "a, w, s, d to move your adventurer | h to use healing potion | v to use vision potion | i to see adventurer information\n")
 
     match key:
       case "a":
-        print("moving left")
+        print("moving west")
+        self.x -= 1
       case "w":
-        print("moving up")
+        print("moving north")
+        self.y -= 1
       case "s":
-        print("moving down")
+        print("moving south")
+        self.y += 1
       case "d":
-        print("moving right")
+        print("moving east")
+        self.x += 1
       case "h":
         if self.healing_potions != 0:
           self.hp_increase()
@@ -78,7 +87,7 @@ class Adventurer:
         self.move()
       case "v":
         if self.vision_potions != 0:
-          # do the vision potion work here
+          # do the vision potion work here, or call the function that does the vision potion work
           print("You used a vision potion!")
           self.vision_potions -= 1
         else:
@@ -86,9 +95,13 @@ class Adventurer:
         self.move()
       case "i":
         print(self.__str__())
-        self.move()  
+        self.move()
       case _:
         self.move()
+
+  def show_available_rooms(self, x, y):
+    # room_content = str()
+    pass
 
   def hp_increase(self):
     """
@@ -101,4 +114,6 @@ class Adventurer:
     Decreases the Hit Points accordingly, damage a pit can cause is from 1-20 hit points
     """
     self.hit_points -= random.randint(1, 20)
+    if self.hit_points <= 0:
+      self.alive = False
 
